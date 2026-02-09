@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Arheny | D.T.</title>
+    <!-- Fuentes Elegantes -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta Original: Dark Luxury */
+            --bg: #050505;          /* Negro Profundo */
+            --card-bg: #0a0a0a;     /* Negro Tarjetas */
+            --text-main: #e0e0e0;   /* Plata */
+            --gold: #d4af37;        /* Dorado Clásico */
+            --gold-dim: #8a702a;    /* Dorado Oscuro */
+            --neon: rgba(212, 175, 55, 0.4); /* Brillo Dorado */
+            --error: #8b0000;       /* Rojo oscuro */
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* --- 1. LOGIN (ESTILO CAJA FUERTE) --- */
+        #lock-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .login-box {
+            border: 1px solid var(--gold-dim);
+            padding: 50px;
+            border-radius: 4px;
+            background: rgba(20, 20, 20, 0.8);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            max-width: 400px; width: 85%;
+        }
+
+        .pass-input {
+            background: transparent; border: none; border-bottom: 2px solid #333;
+            color: var(--gold); font-size: 1.5rem; text-align: center; letter-spacing: 8px;
+            width: 100%; padding: 10px; margin-bottom: 30px; text-transform: uppercase;
+            font-family: 'Playfair Display', serif; transition: 0.3s;
+        }
+        .pass-input:focus { border-bottom-color: var(--gold); }
+        
+        .btn-login {
+            background: transparent; color: var(--gold); border: 1px solid var(--gold);
+            padding: 12px 30px; font-family: 'Lato', sans-serif; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; transition: 0.5s; font-size: 0.8rem;
+        }
+        
+        .btn-login:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--neon); }
+
+        .error-msg { color: var(--error); font-size: 0.7rem; margin-top: 15px; opacity: 0; transition: opacity 0.3s; letter-spacing: 1px;}
+        .shake { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
+
+        /* --- 2. CONTENIDO PRINCIPAL --- */
+        #main-content { display: none; opacity: 0; transition: opacity 2s ease-in; padding-bottom: 150px; }
+
+        /* Header */
+        header { padding: 80px 20px 40px; }
+        
+        .profile-pic {
+            width: 180px; height: 180px; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--gold); 
+            box-shadow: 0 0 30px var(--neon);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .main-title {
+            font-size: 3rem; margin: 30px 0 10px; letter-spacing: 5px; color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        /* --- EFECTO TYPING --- */
+        .typing-container {
+            min-height: 60px; max-width: 600px; margin: 0 auto 50px;
+            font-style: italic; color: #888; font-size: 1rem;
+        }
+
+        /* --- INTRO QUOTE --- */
+        .intro-quote {
+            padding: 20px; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-style: italic;
+            color: var(--text-main); margin-bottom: 40px; border-left: 2px solid var(--gold); display: inline-block;
+        }
+
+        /* --- VIDEO --- */
+        .video-frame {
+            width: 90%; max-width: 800px; margin: 40px auto;
+            border: 1px solid #222; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: 0.5s;
+        }
+        .video-frame:hover { border-color: var(--gold-dim); }
+        .iframe-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* --- SECCIÓN MUSICAL DESTACADA --- */
+        .music-hero {
+            background: linear-gradient(145deg, #111, #080808);
+            border: 1px solid var(--gold-dim);
+            padding: 40px 20px;
+            border-radius: 4px;
+            margin: 80px auto;
+            width: 90%; max-width: 500px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .music-icon { font-size: 2rem; color: var(--gold); margin-bottom: 15px; animation: pulse 3s infinite; }
+        .music-hero h3 { margin: 10px 0; color: #fff; font-size: 1.5rem; letter-spacing: 2px; }
+        audio { width: 100%; margin-top: 20px; height: 35px; filter: invert(0.9); }
+
+        /* --- LÍNEA DE TIEMPO (BITÁCORA) --- */
+        .timeline-section { padding: 50px 20px; text-align: left; max-width: 600px; margin: 0 auto; }
+        .timeline-item { position: relative; padding-left: 30px; margin-bottom: 40px; border-left: 1px solid var(--gold-dim); }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -5px; top: 0; width: 9px; height: 9px;
+            background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold);
+        }
+        .t-date { color: var(--gold); font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 5px; }
+        .t-content { color: #aaa; font-size: 1rem; line-height: 1.6; }
+
+        /* --- SECCIÓN POST-ITS (LO QUE SANASTE) --- */
+        .postit-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px; max-width: 800px; margin: 60px auto; padding: 20px;
+        }
+        .healing-card {
+            background: #0f0f0f; padding: 30px 20px; cursor: pointer; border: 1px solid #222;
+            transition: 0.5s; color: #444; position: relative; overflow: hidden;
+        }
+        .healing-card:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-5px); }
+        .healing-card.active { background: #1a1a1a; color: var(--gold); border-color: var(--gold); }
+        .healing-text { display: none; font-size: 0.9rem; margin-top: 15px; color: #fff; }
+        .healing-card.active .healing-text { display: block; animation: fadeIn 0.8s; }
+        .healing-card.active i { display: none; }
+        .healing-card i { font-size: 2rem; }
+
+        /* --- GALERÍA FUTURA --- */
+        .future-gallery {
+            margin: 100px auto; padding: 40px 20px; border-top: 1px solid #111; border-bottom: 1px solid #111;
+        }
+        .empty-frame {
+            width: 220px; height: 300px; border: 1px solid var(--gold-dim); margin: 30px auto;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: #222; transition: 0.5s; background: #080808;
+            box-shadow: inset 0 0 20px #000;
+        }
+        .empty-frame:hover { border-color: var(--gold); color: var(--gold); }
+        .gallery-text { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-style: italic; color: #888; }
+
+        /* --- MOMENTOS QUE NO EXISTEN --- */
+        .dream-section { margin: 100px auto; padding: 20px; max-width: 900px; }
+        .section-header { font-size: 1.5rem; color: var(--text-main); margin-bottom: 50px; letter-spacing: 3px; text-transform: uppercase; border-bottom: 1px solid var(--gold); display: inline-block; padding-bottom: 10px;}
+        .dream-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+        .dream-card {
+            background: #0a0a0a; width: 260px; padding: 40px 20px;
+            border: 1px solid #222; transition: transform 0.6s ease;
+        }
+        .dream-card:hover { transform: translateY(-10px); border-color: var(--gold-dim); }
+        .dream-icon { font-size: 1.5rem; color: var(--gold-dim); margin-bottom: 20px; }
+        .dream-text { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #ccc; }
+
+        /* --- MINI JUEGO --- */
+        .game-section { margin: 120px auto; }
+        .forbidden-btn {
+            background: transparent; color: #666; border: 1px solid #333;
+            padding: 15px 40px; letter-spacing: 3px; cursor: pointer;
+            font-family: 'Lato', sans-serif; transition: 0.3s; font-size: 0.8rem;
+        }
+        .forbidden-btn:hover { border-color: var(--error); color: var(--error); }
+        .game-msg {
+            margin-top: 30px; font-size: 1.5rem; color: var(--gold);
+            opacity: 0; transition: opacity 1s; font-family: 'Great Vibes', cursive;
+        }
+
+        /* --- ARCHIVOS CLASIFICADOS --- */
+        .secret-files { padding: 40px 20px; max-width: 600px; margin: 0 auto; }
+        .file-folder { background: transparent; border-bottom: 1px solid #222; margin-bottom: 0; cursor: pointer; }
+        .file-header {
+            padding: 25px 10px; display: flex; justify-content: space-between; align-items: center;
+            color: #666; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; transition: 0.3s;
+        }
+        .file-header:hover { color: var(--gold); padding-left: 20px; }
+        .file-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.8s ease-out;
+            color: #ddd; text-align: left; padding: 0 30px;
+            font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic;
+        }
+        .file-content p { padding: 30px 0; margin: 0; }
+
+        /* --- CHECKLIST --- */
+        .checklist { text-align: left; max-width: 400px; margin: 80px auto; padding: 30px; border: 1px solid #222; }
+        .check-item { margin: 20px 0; display: flex; align-items: center; cursor: pointer; color: #666; transition: 0.3s; }
+        .check-box { width: 15px; height: 15px; border: 1px solid #444; margin-right: 20px; display: flex; justify-content: center; align-items: center; transition: 0.3s;}
+        .check-box i { opacity: 0; color: #000; font-size: 0.7rem; }
+        .check-item.active .check-box { background: var(--gold); border-color: var(--gold); }
+        .check-item.active .check-box i { opacity: 1; }
+        .check-item.active { color: #fff; }
+
+        /* --- GENERADOR DE FRASES --- */
+        .quote-machine { margin: 100px auto; max-width: 500px; padding: 20px; }
+        .quote-display {
+            min-height: 80px; font-size: 1.5rem; color: var(--gold); font-family: 'Great Vibes', cursive;
+            margin-bottom: 30px; display: flex; align-items: center; justify-content: center;
+        }
+        .btn-generate {
+            background: transparent; border: 1px solid var(--text-main); color: var(--text-main);
+            padding: 10px 30px; cursor: pointer; letter-spacing: 2px; transition: 0.3s; font-size: 0.7rem;
+        }
+        .btn-generate:hover { background: var(--text-main); color: #000; }
+
+        /* --- INPUT SIMBÓLICO --- */
+        .input-section { margin: 120px auto; max-width: 500px; padding: 0 20px; }
+        .symbolic-input {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid #333;
+            color: var(--gold); font-size: 1.2rem; padding: 15px; text-align: center;
+            font-family: 'Playfair Display', serif; transition: 0.5s; font-style: italic;
+        }
+        .symbolic-input:focus { border-bottom-color: var(--gold); }
+        .send-symbol { 
+            margin-top: 30px; font-size: 0.7rem; color: #444; cursor: pointer; letter-spacing: 3px; text-transform: uppercase; transition: 0.3s;
+        }
+        .send-symbol:hover { color: var(--gold); }
+
+        /* --- SECCIÓN OCULTA --- */
+        .hidden-trigger {
+            width: 6px; height: 6px; background: #111; border-radius: 50%;
+            margin: 150px auto 30px; cursor: pointer; transition: 0.5s;
+        }
+        .hidden-trigger:hover { background: var(--gold); transform: scale(2); }
+        .hidden-content {
+            max-height: 0; overflow: hidden; transition: max-height 2s ease;
+            width: 80%; margin: 0 auto; color: var(--gold);
+        }
+        .poem-final {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; line-height: 1.8;
+            margin: 20px auto; max-width: 600px;
+        }
+
+        footer { margin-top: 100px; font-size: 0.6rem; color: #222; letter-spacing: 3px; margin-bottom: 30px;}
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.7; } }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN -->
+    <div id="lock-screen">
+        <div class="login-box">
+            <p style="letter-spacing: 3px; font-size: 0.7rem; color: var(--gold); margin-bottom: 20px;">ACCESO PERSONAL</p>
+            <input type="password" id="password" class="pass-input" placeholder="..." maxlength="10">
+            <br>
+            <button class="btn-login" onclick="checkPassword()">ABRIR</button>
+            <p id="error-msg" class="error-msg">ACCESO DENEGADO</p>
+        </div>
+    </div>
+
+    <!-- 2. CONTENIDO -->
+    <div id="main-content">
+        
+        <header>
+            <img src="img/arheny.png" alt="Arheny" class="profile-pic">
+            <h1 class="main-title">ARHENY</h1>
+            <div class="typing-container" id="typing-text"></div>
+        </header>
+
+        <!-- INTRODUCCIÓN -->
+        <div class="intro-quote">
+            "Dicen que las mejores historias no se planean...<br>
+            simplemente suceden."
+        </div>
+
+        <!-- VIDEO -->
+        <div class="video-frame">
+            <div class="iframe-container">
+                <iframe src="https://www.youtube.com/embed/SkQ9akEhq-8" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <p style="font-size:0.7rem; color:#444; margin-top:15px; letter-spacing: 2px;">UNA CANCIÓN PARA TI</p>
+
+        <!-- SECCIÓN MUSICAL DESTACADA (HERO) -->
+        <div class="music-hero">
+            <i class="fas fa-compact-disc music-icon"></i>
+            <h3 style="font-family:'Playfair Display';">DOS PIEZAS ROTAS</h3>
+            <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Original - David Torres</p>
+            <audio controls controlsList="nodownload">
+                <source src="audio/dos-piezas-rotas.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <!-- LÍNEA DE TIEMPO -->
+        <div class="timeline-section">
+            <h2 style="font-family:'Playfair Display'; color:#fff; margin-bottom:40px; text-align:center;">BITÁCORA</h2>
+            
+            <div class="timeline-item">
+                <div class="t-date">DÍA 0</div>
+                <div class="t-content">El sistema estaba fallando. Mucho ruido, poca claridad. Necesitaba un reinicio urgente.</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="t-date">DÍA 3</div>
+                <div class="t-content">Apareciste tú. No como una solución mágica, sino como un motivo para pelear contra los demonios.</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="t-date">DÍA 6</div>
+                <div class="t-content">Descubrí que tu elegancia no es solo por fuera. Tienes una mente que atrapa.</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="t-date">HOY</div>
+                <div class="t-content">10 Días Limpio. Y gran parte de esta fuerza tiene tu nombre.</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN POST-ITS (LO QUE SANASTE) -->
+        <div style="margin-top: 100px;">
+            <h2 style="font-size:1.2rem; letter-spacing:3px; color:var(--gold);">LO QUE PROVOCASTE</h2>
+            <p style="font-size:0.7rem; color:#444;">(Toca los iconos)</p>
+            
+            <div class="postit-grid">
+                <div class="healing-card" onclick="toggleHeal(this)">
+                    <i class="fas fa-wind"></i>
+                    <div class="healing-text">Calmaste el ruido en mi cabeza.</div>
+                </div>
+                <div class="healing-card" onclick="toggleHeal(this)">
+                    <i class="fas fa-guitar"></i>
+                    <div class="healing-text">Me devolviste las ganas de crear.</div>
+                </div>
+                <div class="healing-card" onclick="toggleHeal(this)">
+                    <i class="fas fa-gem"></i>
+                    <div class="healing-text">Me recordaste mi valor.</div>
+                </div>
+                <div class="healing-card" onclick="toggleHeal(this)">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="healing-text">Me diste fuerza para mantenerme firme.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALERÍA FUTURA -->
+        <div class="future-gallery">
+            <h2 style="font-family:'Playfair Display'; color:#fff; font-size:1.5rem;">NUESTRA GALERÍA</h2>
+            <div class="empty-frame">
+                <i class="fas fa-camera" style="font-size:1.5rem; color:#333;"></i>
+            </div>
+            <p class="gallery-text">
+                Aún no tenemos fotos juntos...<br>
+                Pero dejé este espacio vacío a propósito.<br>
+                Está reservado para lo que viene.<br>
+            </p>
+        </div>
+
+        <!-- MOMENTOS QUE AÚN NO EXISTEN -->
+        <div class="dream-section">
+            <h2 class="section-header">MOMENTOS QUE AÚN NO EXISTEN<br><span style="font-size:0.7rem; opacity:0.5; font-family:'Lato'; text-transform:none;">(No prometo, solo imagino)</span></h2>
+            <div class="dream-grid">
+                <div class="dream-card">
+                    <div class="dream-icon"><i class="fas fa-road"></i></div>
+                    <div class="dream-text">Una caminata sin rumbo fijo, solo platicando de todo y nada.</div>
+                </div>
+                <div class="dream-card">
+                    <div class="dream-icon"><i class="fas fa-coffee"></i></div>
+                    <div class="dream-text">Un café que se enfría porque la plática no se acaba nunca.</div>
+                </div>
+                <div class="dream-card">
+                    <div class="dream-icon"><i class="fas fa-laugh-beam"></i></div>
+                    <div class="dream-text">Una risa inesperada de esas que duelen en el estómago.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MINI JUEGO -->
+        <div class="game-section">
+            <button class="forbidden-btn" onclick="playGame()">NO TOCAR</button>
+            <div id="game-msg" class="game-msg">Tenía que pasar... la curiosidad nos gana. 😌</div>
+        </div>
+
+        <!-- ARCHIVOS CLASIFICADOS -->
+        <div class="secret-files">
+            <h2 style="color:var(--text-main); font-family:'Playfair Display'; margin-bottom:30px; font-style:italic;">Archivos Confidenciales</h2>
+            <div class="file-folder">
+                <div class="file-header" onclick="toggleFile(this)">
+                    <span>📂 EXPEDIENTE: PASADO</span>
+                    <i class="fas fa-plus" style="font-size:0.7rem;"></i>
+                </div>
+                <div class="file-content">
+                    <p>"Vengo de una tormenta fuerte. Tengo cicatrices, sí. Pero un Ingeniero sabe que las estructuras más fuertes son las que se han puesto a prueba. Ya no soy el de antes, soy la versión mejorada."</p>
+                </div>
+            </div>
+            <div class="file-folder">
+                <div class="file-header" onclick="toggleFile(this)">
+                    <span>📂 EXPEDIENTE: TU VOZ</span>
+                    <i class="fas fa-plus" style="font-size:0.7rem;"></i>
+                </div>
+                <div class="file-content">
+                    <p>"Tienes un tono que calma. Cuando me mandas audio, el mundo se pone en pausa un ratito. Es mi notificación favorita."</p>
+                </div>
+            </div>
+            <div class="file-folder">
+                <div class="file-header" onclick="toggleFile(this)">
+                    <span>📂 EXPEDIENTE: FUTURO</span>
+                    <i class="fas fa-plus" style="font-size:0.7rem;"></i>
+                </div>
+                <div class="file-content">
+                    <p>"No sé qué pase mañana, ni en un año. Pero sé que quiero verte sonreír. Vamos paso a paso, pero pisando firme."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="checklist">
+            <p style="color:#888; margin-bottom:15px; font-size:0.8rem; letter-spacing:2px;">LO QUE OFREZCO:</p>
+            <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div><span>Cero mentiras.</span></div>
+            <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div><span>Escucharte siempre.</span></div>
+            <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div><span>Hacerte reír (o intentarlo).</span></div>
+            <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div><span>La mejor versión de David.</span></div>
+        </div>
+
+        <!-- GENERADOR DE FRASES -->
+        <div class="quote-machine">
+            <p style="color:#666; font-size:0.7rem; letter-spacing:2px;">¿QUÉ PIENSO?</p>
+            <div id="quote-display" class="quote-display">"Haz click abajo..."</div>
+            <button class="btn-generate" onclick="newQuote()">GENERAR</button>
+        </div>
+
+        <!-- INPUT SIMBÓLICO -->
+        <div class="input-section">
+            <input type="text" id="symbolic-input" class="symbolic-input" placeholder="Escribe algo aquí... o no.">
+            <div class="send-symbol" onclick="sendSymbol()">LIBERAR AL UNIVERSO</div>
+        </div>
+
+        <!-- SECCIÓN OCULTA (TRIGGER AL FONDO) -->
+        <div class="hidden-trigger" onclick="revealHidden()"></div>
+        <div id="hidden-content" class="hidden-content">
+            <div class="poem-final">
+                "Gracias por llegar hasta aquí.<br><br>
+                Venía de un invierno largo, de ruidos fuertes y silencios incómodos.<br>
+                Y de repente, sin avisar, apareciste tú.<br>
+                No sé a dónde va esto, pero sé que hoy, el camino se ve más claro.<br><br>
+                - David."
+            </div>
+        </div>
+
+        <footer>D.A.T. | 2026</footer>
+
+    </div>
+
+    <!-- 3. JAVASCRIPT -->
+    <script>
+        // LOGIN
+        function checkPassword() {
+            var pass = document.getElementById('password').value;
+            if (pass.toUpperCase() === 'TQM') {
+                document.getElementById('lock-screen').style.opacity = '0';
+                setTimeout(() => { 
+                    document.getElementById('lock-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    setTimeout(() => { 
+                        document.getElementById('main-content').style.opacity = '1'; 
+                        startTyping();
+                    }, 100);
+                }, 1000);
+            } else {
+                document.getElementById('error-msg').style.opacity = '1';
+                document.querySelector('.login-box').classList.add('shake');
+                setTimeout(() => document.querySelector('.login-box').classList.remove('shake'), 500);
+            }
+        }
+
+        // TYPING
+        var text = "Dicen que el tiempo es relativo... Contigo, estos días han valido por meses.";
+        var index = 0;
+        function startTyping() {
+            if (index < text.length) {
+                document.getElementById('typing-text').innerHTML += text.charAt(index);
+                index++;
+                setTimeout(startTyping, 50);
+            }
+        }
+
+        // POST-ITS
+        function toggleHeal(card) {
+            var all = document.querySelectorAll('.healing-card');
+            all.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+        }
+
+        // MINI GAME
+        function playGame() {
+            document.getElementById('game-msg').style.opacity = '1';
+        }
+
+        // SYMBOLIC INPUT
+        function sendSymbol() {
+            var input = document.getElementById('symbolic-input');
+            if (input.value.trim() !== "") {
+                input.value = "Mensaje entregado al destino ✨";
+                setTimeout(() => { input.value = ""; }, 3000);
+            }
+        }
+
+        // HIDDEN REVEAL
+        function revealHidden() {
+            var content = document.getElementById('hidden-content');
+            if (content.style.maxHeight) { content.style.maxHeight = null; }
+            else { content.style.maxHeight = "600px"; setTimeout(() => { window.scrollTo(0, document.body.scrollHeight); }, 500); }
+        }
+
+        // ACORDEON
+        function toggleFile(header) {
+            var content = header.nextElementSibling;
+            var icon = header.querySelector('i');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null; icon.classList.replace('fa-minus', 'fa-plus');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px"; icon.classList.replace('fa-plus', 'fa-minus');
+            }
+        }
+
+        // CHECKLIST
+        function toggleCheck(item) { item.classList.toggle("active"); }
+
+        // GENERADOR FRASES
+        const quotes = [
+            "Dicen que 6 días es poco... yo digo que es suficiente.",
+            "Me reiniciaste el sistema con una sonrisa.",
+            "Eres el bug más bonito que ha tenido mi vida.",
+            "Me gusta hacia donde va esto.",
+            "Gracias por aparecer cuando todo estaba gris."
+        ];
+        function newQuote() {
+            const random = Math.floor(Math.random() * quotes.length);
+            document.getElementById("quote-display").innerText = quotes[random];
+        }
+
+        // ENTER KEY
+        document.getElementById("password").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") { checkPassword(); }
+        });
+    </script>
+</body>
+</html>
